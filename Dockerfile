@@ -20,7 +20,6 @@ RUN pyenv install 3.6.4 && pyenv global 3.6.4 && pyenv rehash
 
 WORKDIR /opt/lingofunk
 COPY . /opt/lingofunk/
-RUN bash download_model.sh
 RUN pip install --upgrade pip
 RUN pip install .
 RUN python -c "import nltk; nltk.download('punkt')"
