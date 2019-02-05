@@ -25,34 +25,22 @@ class StyleTransferModel(object):
         beta1, beta2 = 0.5, 0.999
         grad_clip = 30.0
 
-        self.dropout = tf.placeholder(tf.float32,
-            name='dropout')
-        self.learning_rate = tf.placeholder(tf.float32,
-            name='learning_rate')
-        self.rho = tf.placeholder(tf.float32,
-            name='rho')
-        self.gamma = tf.placeholder(tf.float32,
-            name='gamma')
+        self.dropout = tf.placeholder(tf.float32, name='dropout')
+        self.learning_rate = tf.placeholder(tf.float32, name='learning_rate')
+        self.rho = tf.placeholder(tf.float32, name='rho')
+        self.gamma = tf.placeholder(tf.float32, name='gamma')
 
-        self.batch_len = tf.placeholder(tf.int32,
-            name='batch_len')
-        self.batch_size = tf.placeholder(tf.int32,
-            name='batch_size')
-        self.enc_inputs = tf.placeholder(tf.int32, [None, None],    #size * len
-            name='enc_inputs')
-        self.dec_inputs = tf.placeholder(tf.int32, [None, None],
-            name='dec_inputs')
-        self.targets = tf.placeholder(tf.int32, [None, None],
-            name='targets')
-        self.weights = tf.placeholder(tf.float32, [None, None],
-            name='weights')
-        self.labels = tf.placeholder(tf.float32, [None],
-            name='labels')
+        self.batch_len = tf.placeholder(tf.int32, name='batch_len')
+        self.batch_size = tf.placeholder(tf.int32, name='batch_size')
+        self.enc_inputs = tf.placeholder(tf.int32, [None, None], name='enc_inputs')  # size * len
+        self.dec_inputs = tf.placeholder(tf.int32, [None, None], name='dec_inputs')
+        self.targets = tf.placeholder(tf.int32, [None, None], name='targets')
+        self.weights = tf.placeholder(tf.float32, [None, None], name='weights')
+        self.labels = tf.placeholder(tf.float32, [None], name='labels')
 
         labels = tf.reshape(self.labels, [-1, 1])
 
-        embedding = tf.get_variable('embedding',
-            initializer=vocab.embedding.astype(np.float32))
+        embedding = tf.get_variable('embedding', initializer=vocab.embedding.astype(np.float32))
         with tf.variable_scope('projection'):
             proj_W = tf.get_variable('W', [dim_h, vocab.size])
             proj_b = tf.get_variable('b', [vocab.size])
@@ -72,14 +60,11 @@ class StyleTransferModel(object):
         #_, z = tf.nn.dynamic_rnn(cell_e, enc_inputs,
         #    dtype=tf.float32, scope='encoder')
 
-        self.h_ori = tf.concat([linear(labels, dim_y,
-            scope='generator'), z], 1)
-        self.h_tsf = tf.concat([linear(1-labels, dim_y,
-            scope='generator', reuse=True), z], 1)
+        self.h_ori = tf.concat([linear(labels, dim_y, scope='generator'), z], 1)
+        self.h_tsf = tf.concat([linear(1-labels, dim_y, scope='generator', reuse=True), z], 1)
 
         cell_g = create_cell(dim_h, n_layers, self.dropout)
-        g_outputs, _ = tf.nn.dynamic_rnn(cell_g, dec_inputs,
-            initial_state=self.h_ori, scope='generator')
+        g_outputs, _ = tf.nn.dynamic_rnn(cell_g, dec_inputs, initial_state=self.h_ori, scope='generator')
 
         # attach h0 in the front
         teach_h = tf.concat([tf.expand_dims(self.h_ori, 1), g_outputs], 1)
@@ -104,10 +89,10 @@ class StyleTransferModel(object):
         soft_h_tsf, soft_logits_tsf = rnn_decode(self.h_tsf, go, max_len,
             cell_g, soft_func, scope='generator')
 
-        hard_h_ori, self.hard_logits_ori = rnn_decode(self.h_ori, go, max_len,
-            cell_g, hard_func, scope='generator')
-        hard_h_tsf, self.hard_logits_tsf = rnn_decode(self.h_tsf, go, max_len,
-            cell_g, hard_func, scope='generator')
+        hard_h_ori, self.hard_logits_ori = rnn_decode(
+            self.h_ori, go, max_len, cell_g, hard_func, scope='generator')
+        hard_h_tsf, self.hard_logits_tsf = rnn_decode(
+            self.h_tsf, go, max_len, cell_g, hard_func, scope='generator')
 
         #####   discriminator   #####
         # a batch's first half consists of sentences of one style,
@@ -127,8 +112,7 @@ class StyleTransferModel(object):
         self.loss_adv = loss_g0 + loss_g1
         self.loss = self.loss_rec + self.rho * self.loss_adv
 
-        theta_eg = retrive_var(['encoder', 'generator',
-            'embedding', 'projection'])
+        theta_eg = retrive_var(['encoder', 'generator', 'embedding', 'projection'])
         theta_d0 = retrive_var(['discriminator0'])
         theta_d1 = retrive_var(['discriminator1'])
 
@@ -187,7 +171,7 @@ def transfer(model, decoder, sess, args, vocab, data0, data1, out_path):
 
 
 def create_model(sess, args, model_config: StyleTransferModelConfig, vocab):
-    model = StyleTransferModel(config, vocab)
+    model = StyleTransferModel(model_config, vocab)
     if args.load_model:
         print('Loading model from', args.model)
         model.saver.restore(sess, args.model)
