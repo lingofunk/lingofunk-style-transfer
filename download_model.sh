@@ -12,8 +12,15 @@ URL="http://people.csail.mit.edu/tianxiao/language-style-transfer/model"
 
 mkdir -p $DIR/model
 
-wget ${URL}/yelp.d100.emb.txt -P $DIR/model/
-wget ${URL}/yelp.vocab -P $DIR/model/
-wget ${URL}/model.data-00000-of-00001 -P $DIR/model/
-wget ${URL}/model.index -P $DIR/model/
-wget ${URL}/model.meta -P $DIR/model/
+files=(
+    "yelp.d100.emb.txt"
+    "yelp.vocab"
+    "model.data-00000-of-00001"
+    "model.index"
+    "model.meta"
+)
+echo $DIR
+
+for file in "${files[@]}"; do
+    wget $URL/$file -O $DIR/model/$file
+done
