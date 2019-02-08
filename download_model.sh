@@ -22,5 +22,5 @@ files=(
 echo $DIR
 
 for file in "${files[@]}"; do
-    wget $URL/$file -O $DIR/model/$file
+    [ ! -f $DIR/model/$file ] && wget $URL/$file --output-document $DIR/model/$file
 done
