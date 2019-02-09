@@ -1,14 +1,15 @@
 import argparse
 import logging
+import sys
 
-from flask import Flask, request, jsonify
-from nltk import sent_tokenize, word_tokenize
 import tensorflow as tf
+from flask import Flask, jsonify, request, Response
 
-from lingofunk_transfer_style import config, greedy_decoding, beam_search
+from lingofunk_transfer_style import beam_search, config, greedy_decoding
 from lingofunk_transfer_style.style_transfer import StyleTransferModel
+from lingofunk_transfer_style.utils import get_batch, untokenize
 from lingofunk_transfer_style.vocab import Vocabulary
-from lingofunk_transfer_style.utils import untokenize, get_batch
+from nltk import sent_tokenize, word_tokenize
 
 logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 logger = logging.getLogger(__name__)
