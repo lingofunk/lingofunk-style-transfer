@@ -33,12 +33,17 @@ class Server:
         self._app = app
         self._transferrer = transferrer
         self._port = port
-        app.route("/api/transfer")(self.transfer)
+        app.route("/api/transfer", methods=["GET", "POST"])(self.transfer)
 
     def transfer(self):
-        text = request.args["text"]
-        is_positive = bool(int(request.args["is_positive"]))
-        return jsonify(text=self._transferrer.transfer(text, is_positive))
+        if request.method == "POST":
+            data = request.get_json()
+            logger.debug()
+            text = data.get("text")
+            is_positive = bool(int(data.get("is_positive")))
+            return jsonify(text=self._transferrer.transfer(text, is_positive))
+        else:
+            return Response(status=501)
 
     def serve(self):
         self._app.run(host="0.0.0.0", port=self._port, debug=True, threaded=True)
