@@ -1,4 +1,5 @@
 import argparse
+import logging
 
 from flask import Flask, request, jsonify
 from nltk import sent_tokenize, word_tokenize
@@ -9,6 +10,9 @@ from lingofunk_transfer_style.style_transfer import StyleTransferModel
 from lingofunk_transfer_style.vocab import Vocabulary
 from lingofunk_transfer_style.utils import untokenize, get_batch
 
+logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 class Transferrer:
     def __init__(self, vocab: Vocabulary, decoder):
@@ -38,7 +42,7 @@ class Server:
     def transfer(self):
         if request.method == "POST":
             data = request.get_json()
-            logger.debug()
+            logger.debug(data)
             text = data.get("text")
             is_positive = bool(int(data.get("is_positive")))
             return jsonify(text=self._transferrer.transfer(text, is_positive))
