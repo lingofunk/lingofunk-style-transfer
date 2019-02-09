@@ -15,6 +15,7 @@ logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
+
 class Transferrer:
     def __init__(self, vocab: Vocabulary, decoder):
         self._vocab = vocab
@@ -42,7 +43,7 @@ class Server:
 
     def transfer(self):
         if request.method == "POST":
-            data = request.json
+            data = request.get_json()
             logger.debug(data)
             text = data.get("text")
             is_positive = bool(int(data.get("is_positive")))
