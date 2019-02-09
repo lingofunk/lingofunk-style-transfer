@@ -42,7 +42,7 @@ class Server:
 
     def transfer(self):
         if request.method == "POST":
-            data = request.get_json()
+            data = request.json
             logger.debug(data)
             text = data.get("text")
             is_positive = bool(int(data.get("is_positive")))
