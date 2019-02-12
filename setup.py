@@ -10,11 +10,11 @@ setup(
     description="Yelp Review Style Transfer",
 
     packages=['lingofunk_transfer_style'],
-    install_requires=['Flask>=1.0.2', 'nltk>=3.4', 'numpy>=1.16.1', 'tensorflow>=1.12.0'],
+    install_requires=['torch>=1.0.1', 'numpy', 'nltk', 'Flask'],
 
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
-        'License :: OSI Approved :: MIT License',
+        'License :: OSI Approved :: BSD License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.6',
     ],
