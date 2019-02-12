@@ -7,7 +7,7 @@ from typing import NamedTuple
 
 from nltk import sent_tokenize, word_tokenize
 
-from .utils import batchify, NamedTupleFromArgs
+from lingofunk_transfer_style.utils import batchify, NamedTupleFromArgs
 
 
 PAD_WORD = "<pad>"

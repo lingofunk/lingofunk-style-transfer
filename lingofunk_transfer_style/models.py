@@ -9,8 +9,8 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 
-from .data import Preprocessor
-from .utils import to_gpu, format_epoch, NamedTupleFromArgs
+from lingofunk_transfer_style.data import Preprocessor
+from lingofunk_transfer_style.utils import to_gpu, format_epoch, NamedTupleFromArgs
 
 
 class MLP_Classify(nn.Module):

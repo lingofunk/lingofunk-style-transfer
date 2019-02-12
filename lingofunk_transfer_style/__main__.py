@@ -9,9 +9,9 @@ from collections import Counter
 
 from flask import Flask, request, jsonify
 
-from .data import Data, DataConfig, Dictionary, Preprocessor
-from .models import Models, ModelsConfig, TextOperations
-from .training import Trainer, TrainingConfig
+from lingofunk_transfer_style.data import Data, DataConfig, Dictionary, Preprocessor
+from lingofunk_transfer_style.models import Models, ModelsConfig, TextOperations
+from lingofunk_transfer_style.training import Trainer, TrainingConfig
 
 
 def parse_args():

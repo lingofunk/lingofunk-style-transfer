@@ -12,9 +12,9 @@ import torch
 import torch.nn.functional as F
 from torch.autograd import Variable
 
-from .data import Data
-from .models import Models
-from .utils import to_gpu, format_epoch, NamedTupleFromArgs
+from lingofunk_transfer_style.data import Data
+from lingofunk_transfer_style.models import Models
+from lingofunk_transfer_style.utils import to_gpu, format_epoch, NamedTupleFromArgs
 
 
 AutoencoderEvaluationResult = namedtuple('AutoencoderEvaluationResult', 'test_loss test_ppl test_accuracy')
